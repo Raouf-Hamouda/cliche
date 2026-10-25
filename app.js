@@ -263,7 +263,7 @@
       sizes.innerHTML = vv.sizes.map(function (s) { return '<button type="button" role="radio" aria-checked="false">' + s + '</button>'; }).join('');
       $$('button', sizes).forEach(function (b) { b.onclick = function () { chosen = b.textContent; $$('button', sizes).forEach(function (x) { x.classList.toggle('on', x === b); x.setAttribute('aria-checked', x === b); }); sizes.classList.remove('need'); szg.classList.remove('need'); $('#selval').textContent = chosen; flash(''); bar(); setTimeout(function () { selOpen(false); }, 260); }; });
     }
-    $('#selval').textContent = ''; $('#baprix').textContent = fmt(vv.price); bar();
+    $('#selval').textContent = ''; $('#baprix').textContent = fmt(vv.price); var bi = $('#barre img'); if (bi) bi.src = vv.gal[0].s; bar();
     $$('#ens button').forEach(function (b) { b.classList.toggle('on', b.dataset.t === vv.tone); b.classList.toggle('off', !P.variants.some(function (x) { return x.tone === b.dataset.t && x.metal === vv.metal; })); });
     $$('#mts button').forEach(function (b) { b.classList.toggle('on', b.dataset.m === vv.metal); b.classList.toggle('off', !P.variants.some(function (x) { return x.metal === b.dataset.m && x.tone === vv.tone; })); });
     var u = new URL(location); if (P.tones.length > 1) u.searchParams.set('c', vv.tone); if (P.metals.length > 1) u.searchParams.set('m', vv.metal); history.replaceState(null, '', u);

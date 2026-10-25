@@ -1371,3 +1371,18 @@ img[src*="/pk_"]{mix-blend-mode:multiply}
 /* close buttons: a plain cross */
 .mclose,.lbx-x{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:0;color:var(--ink);line-height:0}
 .lbx.zoom{touch-action:none}
+/* 25 oct 2026: phone views 10 % bigger and closer, soft fade in/out on scroll */
+@media(max-width:900px){
+ body.product .cp{aspect-ratio:5/3}
+ body.product .cp img{max-width:38.8%;max-height:68%}
+ @supports(animation-timeline:view()){
+  body.product .cp img,body.product .rf img{animation:vue linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+  @keyframes vue{0%{opacity:0;transform:translateY(18px) scale(.97)}28%,72%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-18px) scale(.97)}}
+ }
+}
+/* menu starts on the X line, one hairline before the Nouveautés block */
+#menu{padding-top:9px}
+#menu #mclose{z-index:2}
+#menu .mfeat{border-top:0}
+/* no outline or border around the close X, ever */
+#mclose,#dclose,#mclose:focus,#dclose:focus,#mclose:focus-visible,#dclose:focus-visible{outline:0;border:0;box-shadow:none;background:none}
