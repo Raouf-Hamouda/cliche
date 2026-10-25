@@ -1365,3 +1365,9 @@ img[src*="/pk_"]{mix-blend-mode:multiply}
 .lbx.zoom img{transform:scale(2.4);cursor:zoom-out}
 .lbx-x{position:absolute;top:22px;right:28px;background:none;border:0;font:700 10px/14px var(--sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink);cursor:pointer;padding:12px}
 @media(prefers-reduced-motion:reduce){.lbx,.lbx img{transition:none}}
+
+/* phone: no end-of-page rubber band dragging the footer and the fixed buy button; the button on its own layer so it holds still */
+@media(max-width:900px){html,body{overscroll-behavior-y:none}body.product #add{transform:translateZ(0);backface-visibility:hidden}}
+/* close buttons: a plain cross */
+.mclose,.lbx-x{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:0;color:var(--ink);line-height:0}
+.lbx.zoom{touch-action:none}

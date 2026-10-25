@@ -290,6 +290,8 @@
   function flash(h, err) { var f = $('#flash'); f.innerHTML = h; f.classList.toggle('err', !!err); f.classList.toggle('on', !!h); }
   function bar() { var on = $('#ens button.on'), b = $('#baopts'); if (!b) return; b.textContent = [on ? on.dataset.l : '', P.metals.length > 1 ? (v.metal === 'argent' ? 'Argent 925' : 'Or 750') : '', chosen && 'Taille ' + chosen].filter(Boolean).join(' · '); }
   paint(v); first = false;
+  /* decode every colour's first picture ahead of time, so a tap on a phone swaps at once instead of waiting on the network */
+  var warm = []; (window.requestIdleCallback || setTimeout)(function () { P.variants.forEach(function (x) { var im = new Image(); im.src = x.gal[0].s; if (im.decode) im.decode().catch(function () {}); warm.push(im); }); });
   if (v.sizeflag && v.sizes.length) selOpen(true, true);
   $$('#ens button').forEach(function (b) { b.onclick = function () { v = find(b.dataset.t, v.metal); paint(v); }; });
   $$('#mts button').forEach(function (b) { b.onclick = function () { v = find(v.tone, b.dataset.m); paint(v); }; });
@@ -317,7 +319,7 @@
 (function () {
   var pdp = document.getElementById('pdp'); if (!pdp) return;
   var box = document.createElement('div'); box.className = 'lbx'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', 'Photo');
-  box.innerHTML = '<button type="button" class="lbx-x" aria-label="Fermer">Fermer</button>';
+  box.innerHTML = '<button type="button" class="lbx-x" aria-label="Fermer"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>';
   document.body.appendChild(box);
   var im = document.createElement('img'), last = null; im.className = 'rdy';
   function open(src, alt) { last = document.activeElement; if (!im.parentNode) box.appendChild(im); im.src = src; im.alt = alt || ''; box.classList.remove('zoom'); box.classList.add('on'); document.body.style.overflow = 'hidden'; box.querySelector('.lbx-x').focus(); }
@@ -331,5 +333,16 @@
   });
   function move(e) { if (!box.classList.contains('zoom')) return; var r = im.getBoundingClientRect(); im.style.transformOrigin = ((e.clientX - r.left) / r.width * 100) + '% ' + ((e.clientY - r.top) / r.height * 100) + '%'; }
   box.addEventListener('mousemove', move);
+  /* phone: once zoomed, drag with a finger to travel across the picture */
+  var ox = 50, oy = 50, tx, ty;
+  function setO() { ox = Math.max(0, Math.min(100, ox)); oy = Math.max(0, Math.min(100, oy)); im.style.transformOrigin = ox + '% ' + oy + '%'; }
+  box.addEventListener('touchstart', function (e) { var t = e.touches[0]; tx = t.clientX; ty = t.clientY; var m = /([\d.]+)% ([\d.]+)%/.exec(im.style.transformOrigin); if (m) { ox = +m[1]; oy = +m[2]; } }, { passive: true });
+  box.addEventListener('touchmove', function (e) {
+    if (!box.classList.contains('zoom') || e.touches.length > 1) return;
+    e.preventDefault(); var t = e.touches[0];
+    /* scale 2.4 about the origin: moving the origin by d shifts the picture by -1.4 d */
+    ox -= (t.clientX - tx) / (1.4 * im.offsetWidth) * 100; oy -= (t.clientY - ty) / (1.4 * im.offsetHeight) * 100;
+    tx = t.clientX; ty = t.clientY; setO();
+  }, { passive: false });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && box.classList.contains('on')) close(); });
 })();
