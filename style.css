@@ -1386,3 +1386,5 @@ img[src*="/pk_"]{mix-blend-mode:multiply}
 #menu .mfeat{border-top:0}
 /* no outline or border around the close X, ever */
 #mclose,#dclose,#mclose:focus,#dclose:focus,#mclose:focus-visible,#dclose:focus-visible{outline:0;border:0;box-shadow:none;background:none}
+/* the Joaillerie line stops before the X */
+#menu nav a:first-child{margin-right:56px}
