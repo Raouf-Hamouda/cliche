@@ -16,6 +16,21 @@
     var rv = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); rv.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px', threshold: .06 });
     $$('.tile,.band .bc,.cell,.pc,.nrow,.nyear h3,.story,.more h2,.prow,.aitem,.mkf,.cform > *').forEach(function (e) { e.classList.add('rv'); rv.observe(e); });
   }
+  /* artisan figures: every number counts up from 0 when the block comes into view */
+  if (!RM && 'IntersectionObserver' in window) $$('.mkf').forEach(function (f) {
+    var dts = $$('dt', f), txt = dts.map(function (d) { return d.textContent; });
+    f.classList.add('anim'); dts.forEach(function (d) { d.textContent = d.textContent.replace(/\d+/g, '0'); });
+    var io = new IntersectionObserver(function (es) {
+      if (!es[0].isIntersecting) return; io.disconnect(); f.classList.add('go');
+      var t0 = performance.now();
+      (function step(t) {
+        var k = Math.min(1, (t - t0) / 1400), e = 1 - Math.pow(1 - k, 3);
+        dts.forEach(function (d, i) { d.textContent = txt[i].replace(/\d+/g, function (n) { return Math.round(n * e); }); });
+        if (k < 1) requestAnimationFrame(step);
+      })(t0);
+    }, { threshold: .6 });
+    io.observe(f);
+  });
   var pf = {}; $$('a[href^="/"]').forEach(function (a) { a.addEventListener('pointerenter', function () { var h = a.getAttribute('href').split('#')[0]; if (!h || pf[h]) return; pf[h] = 1; var l = document.createElement('link'); l.rel = 'prefetch'; l.href = h; document.head.appendChild(l); }, { once: true }); });
 
   /* header: transparent over the hero, white after scroll */

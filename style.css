@@ -1388,3 +1388,19 @@ img[src*="/pk_"]{mix-blend-mode:multiply}
 #mclose,#dclose,#mclose:focus,#dclose:focus,#mclose:focus-visible,#dclose:focus-visible{outline:0;border:0;box-shadow:none;background:none}
 /* the Joaillerie line stops before the X */
 #menu nav a:first-child{margin-right:56px}
+/* artisan figures: lines trace like a drawing, numbers count up, captions follow (once, on scroll) */
+html.js .mkf.anim{position:relative;border-top-color:transparent}
+html.js .mkf.anim>div{position:relative;border-right-color:transparent}
+html.js .mkf.anim::before{content:"";position:absolute;left:0;right:0;top:-1px;height:1px;background:var(--hair);transform:scaleX(0);transform-origin:left;transition:transform 1.1s cubic-bezier(.65,0,.35,1)}
+html.js .mkf.anim>div:not(:last-child)::after{content:"";position:absolute;right:-1px;top:0;bottom:0;width:1px;background:var(--hair);transform:scaleY(0);transform-origin:top;transition:transform .7s cubic-bezier(.65,0,.35,1)}
+html.js .mkf.anim>div:nth-child(1)::after{transition-delay:.7s}
+html.js .mkf.anim>div:nth-child(2)::after{transition-delay:.95s}
+html.js .mkf.anim dt{font-variant-numeric:tabular-nums}
+html.js .mkf.anim dd{opacity:0;transform:translateY(6px);transition:opacity .8s ease,transform .8s ease}
+html.js .mkf.anim>div:nth-child(1) dd{transition-delay:1s}
+html.js .mkf.anim>div:nth-child(2) dd{transition-delay:1.2s}
+html.js .mkf.anim>div:nth-child(3) dd{transition-delay:1.4s}
+html.js .mkf.anim.go::before,html.js .mkf.anim.go>div::after{transform:none}
+html.js .mkf.anim.go dd{opacity:1;transform:none}
+/* artisan intro in the same sans as the other paragraphs */
+.mkp{font:400 16px/27px var(--sans);color:#555;max-width:40ch}
